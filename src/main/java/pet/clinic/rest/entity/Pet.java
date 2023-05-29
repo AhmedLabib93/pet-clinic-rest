@@ -1,5 +1,6 @@
 package pet.clinic.rest.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,10 +28,12 @@ public class Pet {
     @Column(name = "birth_date", columnDefinition = "DATE")
     private Date birthDate;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "type_id")
     private PetType type;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "owner_id")
     private Owner owner;

@@ -35,6 +35,13 @@ public class PetServiceImpl implements PetService {
     @Override
     public PetDto addPet(PetDto petDto) {
         Pet pet = modelMapper.map(petDto, Pet.class);
+        Owner owner = ownerRepository.findById(petDto.getOwnerId()).orElseThrow(()
+                -> new ResourceNotFound("Owner not found with id " + petDto.getOwnerId()));
+        PetType type = petTypeRepository.findById(petDto.getTypeId()).orElseThrow(()
+                -> new ResourceNotFound("PetType not found with id " + petDto.getTypeId()));
+
+        pet.setOwner(owner);
+        pet.setType(type);
         Pet newPet = petRepository.save(pet);
         return modelMapper.map(newPet, PetDto.class);
     }
@@ -55,9 +62,9 @@ public class PetServiceImpl implements PetService {
     public PetDto updatePet(PetDto petDto, long id) {
         Pet pet = petRepository.findById(id).orElseThrow(()
                 -> new ResourceNotFound("Pet not found with id " + id));
-        Owner owner = ownerRepository.findById(id).orElseThrow(()
+        Owner owner = ownerRepository.findById(petDto.getOwnerId()).orElseThrow(()
                 -> new ResourceNotFound("Owner not found with id " + petDto.getOwnerId()));
-        PetType type = petTypeRepository.findById(id).orElseThrow(()
+        PetType type = petTypeRepository.findById(petDto.getTypeId()).orElseThrow(()
                 -> new ResourceNotFound("PetType not found with id " + petDto.getTypeId()));
 
         pet.setId(id);
